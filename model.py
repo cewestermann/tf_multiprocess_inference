@@ -15,6 +15,8 @@ from tensorflow import keras
 from skimage.io import imread
 from skimage.transform import resize
 
+tf.debugging.set_log_device_placement(True)
+
 DATA = './data'
 
 image_paths = glob.glob(os.path.join(DATA, 'imgs/*.jpg'))
@@ -49,6 +51,12 @@ class Dataset(keras.utils.Sequence):
 def get_model(img_size):
     inputs = keras.Input(shape=img_size)
     x = keras.layers.Conv2D(8, 3, padding="same")(inputs)
+    x = keras.layers.Activation("relu")(x)
+    x = keras.layers.Conv2D(16, 3, padding="same")(x)
+    x = keras.layers.Activation("relu")(x)
+    x = keras.layers.Conv2D(32, 3, padding="same")(x)
+    x = keras.layers.Activation("relu")(x)
+    x = keras.layers.Conv2D(64, 3, padding="same")(x)
     outputs = keras.layers.Activation("relu")(x)
     return keras.Model(inputs, outputs)
 
@@ -66,7 +74,3 @@ if __name__ == '__main__':
     model.compile(optimizer="rmsprop", loss="sparse_categorical_crossentropy")
     epochs = 5
     model.fit(ds_train, epochs=epochs, validation_data = ds_val)
-
-
-
-
