@@ -1,3 +1,6 @@
+
+"Seems to work on Windows"
+
 import glob
 import os
 import time
